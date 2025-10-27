@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Narrativa Café - Menú Interactivo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+        
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500&display=swap');
+        
+        .font-playfair { font-family: 'Playfair Display', serif; }
+        .font-inter { font-family: 'Inter', sans-serif; }
+        
+        .category-sandwiches { background: linear-gradient(135deg, #fef3c7 0%, #f59e0b 100%); }
+        .category-hotcakes { background: linear-gradient(135deg, #fecaca 0%, #dc2626 100%); }
+        .category-wraps { background: linear-gradient(135deg, #dcfce7 0%, #16a34a 100%); }
+        
+        .item-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+        
+        .item-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .sandwich-card { border-left-color: #f59e0b; }
+        .hotcake-card { border-left-color: #dc2626; }
+        .wrap-card { border-left-color: #16a34a; }
+        
+        .order-summary {
+            position: sticky;
+            top: 2rem;
+        }
+        
+        .quantity-btn {
+            transition: all 0.2s ease;
+        }
+        
+        .quantity-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .customization-option {
+            transition: all 0.2s ease;
+        }
+        
+        .customization-option:hover {
+            background-color: #f3f4f6;
+        }
+        
+        .selected {
+            background-color: #dbeafe;
+            border-color: #3b82f6;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-stone-100 min-h-full font-inter">
+    <header class="bg-white shadow-sm border-b border-stone-200">
+        <div class="max-w-7xl mx-auto px-4 py-6">
+            <h1 class="font-playfair text-4xl font-bold text-stone-800 text-center">Narrativa Café</h1>
+            <p class="text-stone-600 text-center mt-2 font-light">Cafetería móvil itinerante • Desayunos que cuentan historias</p>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <div class="grid lg:grid-cols-3 gap-8">
+            <!-- Menú -->
+            <div class="lg:col-span-2">
+                <!-- Sándwiches -->
+                <section class="mb-12">
+                    <div class="category-sandwiches rounded-lg p-6 mb-6">
+                        <h2 class="font-playfair text-3xl font-semibold text-amber-900 mb-2">Sándwich</h2>
+                        <p class="text-amber-800 font-light">Arma tu sándwich perfecto a tu manera</p>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-1 gap-4 max-w-2xl">
+                        <div class="item-card sandwich-card bg-white rounded-lg p-6 shadow-sm">
+                            <div class="flex justify-between items-start mb-3">
+                                <h3 class="font-playfair text-xl font-semibold text-stone-800">Sándwich Clásico</h3>
+                                <span class="text-amber-600 font-semibold text-lg">$39 MXN</span>
+                            </div>
+                            <p class="text-stone-600 text-sm mb-4">Queso, jamón, lechuga, tomate, salchicha, huevo, zanahoria, aderezo de mayonesa y chipotle</p>
+                            <p class="text-stone-500 text-xs mb-4">¡Personalízalo! Quita ingredientes o agrega extras</p>
+                            <button onclick="openCustomization('Sándwich Clásico', 39, 'sandwich')" 
+                                    class="w-full bg-amber-500 hover:bg-amber-600 text-white py-2 px-4 rounded-md transition-colors font-medium">
+                                Personalizar y Agregar
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Hotcakes -->
+                <section class="mb-12">
+                    <div class="category-hotcakes rounded-lg p-6 mb-6">
+                        <h2 class="font-playfair text-3xl font-semibold text-red-900 mb-2">Hotcakes</h2>
+                        <p class="text-red-800 font-light">2 piezas grandes con azúcar glass y miel</p>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-1 gap-4 max-w-2xl">
+                        <div class="item-card hotcake-card bg-white rounded-lg p-6 shadow-sm">
+                            <div class="flex justify-between items-start mb-3">
+                                <h3 class="font-playfair text-xl font-semibold text-stone-800">Hotcakes Tradicionales</h3>
+                                <span class="text-red-600 font-semibold text-lg">$49 MXN</span>
+                            </div>
+                            <p class="text-stone-600 text-sm mb-4">2 piezas grandes acompañadas de azúcar glass y miel</p>
+                            <p class="text-stone-500 text-xs mb-4">Agrega toppings extras para hacerlos únicos</p>
+                            <button onclick="openCustomization('Hotcakes Tradicionales', 49, 'hotcake')" 
+                                    class="w-full bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md transition-colors font-medium">
+                                Personalizar y Agregar
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Wraps -->
+                <section class="mb-12">
+                    <div class="category-wraps rounded-lg p-6 mb-6">
+                        <h2 class="font-playfair text-3xl font-semibold text-green-900 mb-2">Wraps</h2>
+                        <p class="text-green-800 font-light">Sabores únicos envueltos en tortilla fresca</p>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="item-card wrap-card bg-white rounded-lg p-6 shadow-sm">
+                            <div class="flex justify-between items-start mb-3">
+                                <h3 class="font-playfair text-xl font-semibold text-stone-800">Wrap de Huevo a la Mexicana</h3>
+                                <span class="text-green-600 font-semibold text-lg">$59 MXN</span>
+                            </div>
+                            <p class="text-stone-600 text-sm mb-4">Huevos revueltos con jitomate, cebolla y chile serrano</p>
+                            <button onclick="addToOrder('Wrap de Huevo a la Mexicana', 59, 'wrap')" 
+                                    class="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md transition-colors font-medium">
+                                Agregar al Pedido
+                            </button>
+                        </div>
+                        
+                        <div class="item-card wrap-card bg-white rounded-lg p-6 shadow-sm">
+                            <div class="flex justify-between items-start mb-3">
+                                <h3 class="font-playfair text-xl font-semibold text-stone-800">Wrap de Pollo a la Plancha</h3>
+                                <span class="text-green-600 font-semibold text-lg">$59 MXN</span>
+                            </div>
+                            <p class="text-stone-600 text-sm mb-4">Pollo a la plancha con vegetales frescos y aderezo especial</p>
+                            <button onclick="addToOrder('Wrap de Pollo a la Plancha', 59, 'wrap')" 
+                                    class="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md transition-colors font-medium">
+                                Agregar al Pedido
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Resumen del Pedido -->
+            <div class="lg:col-span-1">
+                <div class="order-summary bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="font-playfair text-2xl font-semibold text-stone-800 mb-4">Tu Pedido</h3>
+                    <div id="orderItems" class="space-y-3 mb-6">
+                        <p class="text-stone-500 text-center py-8">Tu pedido aparecerá aquí</p>
+                    </div>
+                    <div class="border-t pt-4">
+                        <div class="flex justify-between items-center text-lg font-semibold mb-4">
+                            <span>Total:</span>
+                            <span id="orderTotal" class="text-stone-800">$0 MXN</span>
+                        </div>
+                        <button id="whatsappBtn" onclick="sendToWhatsApp()" 
+                                class="w-full bg-green-500 hover:bg-green-600 text-white py-3 px-4 rounded-md transition-colors font-medium flex items-center justify-center space-x-2 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                                disabled>
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.309"/>
+                            </svg>
+                            <span>Enviar Pedido por WhatsApp</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal de Personalización -->
+    <div id="customizationModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-lg max-w-md w-full max-h-full overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 id="modalTitle" class="font-playfair text-xl font-semibold text-stone-800"></h3>
+                    <button onclick="closeCustomization()" class="text-stone-400 hover:text-stone-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div id="customizationContent" class="mb-6">
+                    <!-- Las opciones de personalización se cargarán dinámicamente -->
+                </div>
+
+                <div class="flex justify-between items-center mb-4">
+                    <span class="font-medium">Precio:</span>
+                    <span id="modalPrice" class="text-lg font-semibold text-red-600"></span>
+                </div>
+
+                <button onclick="addCustomizedItem()" 
+                        class="w-full bg-red-500 hover:bg-red-600 text-white py-3 px-4 rounded-md transition-colors font-medium">
+                    Agregar al Pedido
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let orderItems = [];
+        let currentItem = null;
+
+        function addToOrder(name, price, category) {
+            const existingItem = orderItems.find(item => item.name === name && !item.customizations);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                orderItems.push({
+                    id: Date.now(),
+                    name: name,
+                    price: price,
+                    quantity: 1,
+                    category: category
+                });
+            }
+            
+            updateOrderDisplay();
+        }
+
+        function openCustomization(name, price, category) {
+            currentItem = { name, price, category };
+            document.getElementById('modalTitle').textContent = name;
+            document.getElementById('modalPrice').textContent = `$${price} MXN`;
+            
+            // Cargar opciones específicas según la categoría
+            loadCustomizationOptions(category);
+            
+            document.getElementById('customizationModal').classList.remove('hidden');
+            document.getElementById('customizationModal').classList.add('flex');
+            
+            updateModalPrice();
+        }
+
+        function loadCustomizationOptions(category) {
+            const content = document.getElementById('customizationContent');
+            let html = '';
+
+            if (category === 'sandwich') {
+                html = `
+                    <div class="mb-6">
+                        <h4 class="font-medium text-stone-700 mb-3">Ingredientes Base (puedes quitar los que no quieras)</h4>
+                        <div class="space-y-2">
+                            <label class="customization-option flex items-center p-2 rounded border cursor-pointer">
+                                <input type="checkbox" name="base" value="queso" class="mr-3" checked>
+                                <span>Queso</span>
+                            </label>
+                            <label class="customization-option flex items-center p-2 rounded border cursor-pointer">
+                                <input type="checkbox" name="base" value="jamon" class="mr-3" checked>
+                                <span>Jamón</span>
+                            </label>
+                            <label class="customization-option flex items-center p-2 rounded border cursor-pointer">
+                                <input type="checkbox" name="base" value="lechuga" class="mr-3" checked>
+                                <span>Lechuga</span>
+                            </label>
+                            <label class="customization-option flex items-center p-2 rounded border cursor-pointer">
+                                <input type="checkbox" name="base" value="tomate" class="mr-3" checked>
+                                <span>Tomate</span>
+                            </label>
+                            <label class="customization-option flex items-center p-2 rounded border cursor-pointer">
+                                <input type="checkbox" name="base" value="salchicha" class="mr-3" checked>
+                                <span>Salchicha</span>
+                            </label>
+                            <label class="customization-option flex items-center p-2 rounded border cursor-pointer">
+                                <input type="checkbox" name="base" value="huevo" class="mr-3" checked>
+                                <span>Huevo</span>
+                            </label>
+                            <label class="customization-option flex items-center p-2 rounded border cursor-pointer">
+                                <input type="checkbox" name="base" value="zanahoria" class="mr-3" checked>
+                                <span>Zanahoria</span>
+                            </label>
+                            <label class="customization-option flex items-center p-2 rounded border cursor-pointer">
+                                <input type="checkbox" name="base" value="mayonesa" class="mr-3" checked>
+                                <span>Aderezo de mayonesa</span>
+                            </label>
+                            <label class="customization-option flex items-center p-2 rounded border cursor-pointer">
+                                <input type="checkbox" name="base" value="chipotle" class="mr-3" checked>
+                                <span>Aderezo de chipotle</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mb-6">
+                        <h4 class="font-medium text-stone-700 mb-3">Ingredientes Gratis (agregar)</h4>
+                        <div class="space-y-2">
+                            <label class="customization-option flex items-center p-2 rounded border cursor-pointer">
+                                <input type="checkbox" name="free" value="champinones" class="mr-3">
+                                <span>Champiñones</span>
+                            </label>
+                            <label class="customization-option flex items-center p-2 rounded border cursor-pointer">
+                                <input type="checkbox" name="free" value="alfalfa" class="mr-3">
+                                <span>Alfalfa</span>
+                            </label>
+                            <label class="customization-option flex items-center p-2 rounded border cursor-pointer">
+                                <input type="checkbox" name="free" value="espinaca" class="mr-3">
+                                <span>Espinaca</span>
+                            </label>
+                            <label class="customization-option flex items-center p-2 rounded border cursor-pointer">
+                                <input type="checkbox" name="free" value="pepino" class="mr-3">
+                                <span>Pepino</span>
+                            </label>
+                            <label class="customization-option flex items-center p-2 rounded border cursor-pointer">
+                                <input type="checkbox" name="free" value="cebolla" class="mr-3">
+                                <span>Cebolla</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mb-6">
+                        <h4 class="font-medium text-stone-700 mb-3">Extras con Costo</h4>
+                        <div class="space-y-2">
+                            <label class="customization-option flex items-center p-2 rounded border cursor-pointer">
+                                <input type="checkbox" name="extras" value="tocino" class="mr-3">
+                                <span>Tocino (+$20 MXN)</span>
+                            </label>
+                            <label class="customization-option flex items-center p-2 rounded border cursor-pointer">
+                                <input type="checkbox" name="extras" value="pepperoni" class="mr-3">
+                                <span>Pepperoni (+$20 MXN)</span>
+                            </label>
+                            <label class="customization-option flex items-center p-2 rounded border cursor-pointer">
+                                <input type="checkbox" name="extras" value="pollo-plancha" class="mr-3">
+                                <span>Pollo a la plancha (+$29 MXN)</span>
+                            </label>
+                            <label class="customization-option flex items-center p-2 rounded border cursor-pointer">
+                                <input type="checkbox" name="extras" value="pollo-crispy" class="mr-3">
+                                <span>Pollo Crispy (+$29 MXN)</span>
+                            </label>
+                        </div>
+                    </div>
+                `;
+            } else if (category === 'hotcake') {
+                html = `
+                    <div class="mb-6">
+                        <h4 class="font-medium text-stone-700 mb-3">Toppings Extras</h4>
+                        <div class="space-y-2">
+                            <label class="customization-option flex items-center p-2 rounded border cursor-pointer">
+                                <input type="checkbox" name="toppings" value="chocolate" class="mr-3">
+                                <span>Chocolate (+$15 MXN)</span>
+                            </label>
+                            <label class="customization-option flex items-center p-2 rounded border cursor-pointer">
+                                <input type="checkbox" name="toppings" value="lechera" class="mr-3">
+                                <span>Lechera (+$15 MXN)</span>
+                            </label>
+                            <label class="customization-option flex items-center p-2 rounded border cursor-pointer">
+                                <input type="checkbox" name="toppings" value="avellana" class="mr-3">
+                                <span>Avellana (+$15 MXN)</span>
+                            </label>
+                            <label class="customization-option flex items-center p-2 rounded border cursor-pointer">
+                                <input type="checkbox" name="toppings" value="cajeta" class="mr-3">
+                                <span>Cajeta (+$15 MXN)</span>
+                            </label>
+                            <label class="customization-option flex items-center p-2 rounded border cursor-pointer">
+                                <input type="checkbox" name="toppings" value="mermelada" class="mr-3">
+                                <span>Mermelada de fresa (+$15 MXN)</span>
+                            </label>
+                        </div>
+                    </div>
+                `;
+            }
+
+            content.innerHTML = html;
+        }
+
+        function closeCustomization() {
+            document.getElementById('customizationModal').classList.add('hidden');
+            document.getElementById('customizationModal').classList.remove('flex');
+            currentItem = null;
+        }
+
+        function updateModalPrice() {
+            if (!currentItem) return;
+            
+            let totalPrice = currentItem.price;
+            
+            // Calcular costos adicionales según la categoría
+            if (currentItem.category === 'sandwich') {
+                const extras = document.querySelectorAll('input[name="extras"]:checked');
+                extras.forEach(extra => {
+                    if (extra.value === 'tocino' || extra.value === 'pepperoni') {
+                        totalPrice += 20;
+                    } else if (extra.value === 'pollo-plancha' || extra.value === 'pollo-crispy') {
+                        totalPrice += 29;
+                    }
+                });
+            } else if (currentItem.category === 'hotcake') {
+                const toppings = document.querySelectorAll('input[name="toppings"]:checked');
+                toppings.forEach(topping => {
+                    totalPrice += 15;
+                });
+            }
+            
+            document.getElementById('modalPrice').textContent = `$${totalPrice} MXN`;
+        }
+
+        function addCustomizedItem() {
+            if (!currentItem) return;
+            
+            let totalPrice = currentItem.price;
+            let customizations = [];
+            
+            if (currentItem.category === 'sandwich') {
+                // Ingredientes base removidos
+                const baseIngredients = ['queso', 'jamon', 'lechuga', 'tomate', 'salchicha', 'huevo', 'zanahoria', 'mayonesa', 'chipotle'];
+                const removedIngredients = [];
+                
+                baseIngredients.forEach(ingredient => {
+                    const checkbox = document.querySelector(`input[name="base"][value="${ingredient}"]`);
+                    if (checkbox && !checkbox.checked) {
+                        const names = {
+                            'queso': 'Sin queso',
+                            'jamon': 'Sin jamón',
+                            'lechuga': 'Sin lechuga',
+                            'tomate': 'Sin tomate',
+                            'salchicha': 'Sin salchicha',
+                            'huevo': 'Sin huevo',
+                            'zanahoria': 'Sin zanahoria',
+                            'mayonesa': 'Sin mayonesa',
+                            'chipotle': 'Sin chipotle'
+                        };
+                        removedIngredients.push(names[ingredient]);
+                    }
+                });
+                
+                if (removedIngredients.length > 0) {
+                    customizations.push(...removedIngredients);
+                }
+                
+                // Ingredientes gratis agregados
+                const freeIngredients = document.querySelectorAll('input[name="free"]:checked');
+                freeIngredients.forEach(ingredient => {
+                    const names = {
+                        'champinones': 'Con champiñones',
+                        'alfalfa': 'Con alfalfa',
+                        'espinaca': 'Con espinaca',
+                        'pepino': 'Con pepino',
+                        'cebolla': 'Con cebolla'
+                    };
+                    customizations.push(names[ingredient.value]);
+                });
+                
+                // Extras con costo
+                const extras = document.querySelectorAll('input[name="extras"]:checked');
+                extras.forEach(extra => {
+                    const extraNames = {
+                        'tocino': 'Con tocino',
+                        'pepperoni': 'Con pepperoni',
+                        'pollo-plancha': 'Con pollo a la plancha',
+                        'pollo-crispy': 'Con pollo crispy'
+                    };
+                    customizations.push(extraNames[extra.value]);
+                    
+                    if (extra.value === 'tocino' || extra.value === 'pepperoni') {
+                        totalPrice += 20;
+                    } else if (extra.value === 'pollo-plancha' || extra.value === 'pollo-crispy') {
+                        totalPrice += 29;
+                    }
+                });
+            } else if (currentItem.category === 'hotcake') {
+                const toppings = document.querySelectorAll('input[name="toppings"]:checked');
+                toppings.forEach(topping => {
+                    const toppingNames = {
+                        'chocolate': 'Con chocolate',
+                        'lechera': 'Con lechera',
+                        'avellana': 'Con avellana',
+                        'cajeta': 'Con cajeta',
+                        'mermelada': 'Con mermelada de fresa'
+                    };
+                    customizations.push(toppingNames[topping.value]);
+                    totalPrice += 15;
+                });
+            }
+            
+            orderItems.push({
+                id: Date.now(),
+                name: currentItem.name,
+                price: totalPrice,
+                quantity: 1,
+                category: currentItem.category,
+                customizations: customizations.length > 0 ? customizations : null
+            });
+            
+            updateOrderDisplay();
+            closeCustomization();
+        }
+
+        function removeFromOrder(id) {
+            orderItems = orderItems.filter(item => item.id !== id);
+            updateOrderDisplay();
+        }
+
+        function updateQuantity(id, change) {
+            const item = orderItems.find(item => item.id === id);
+            if (item) {
+                item.quantity += change;
+                if (item.quantity <= 0) {
+                    removeFromOrder(id);
+                } else {
+                    updateOrderDisplay();
+                }
+            }
+        }
+
+        function updateOrderDisplay() {
+            const orderItemsContainer = document.getElementById('orderItems');
+            const orderTotal = document.getElementById('orderTotal');
+            const whatsappBtn = document.getElementById('whatsappBtn');
+            
+            if (orderItems.length === 0) {
+                orderItemsContainer.innerHTML = '<p class="text-stone-500 text-center py-8">Tu pedido aparecerá aquí</p>';
+                orderTotal.textContent = '$0 MXN';
+                whatsappBtn.disabled = true;
+                return;
+            }
+            
+            whatsappBtn.disabled = false;
+            
+            let total = 0;
+            let html = '';
+            
+            orderItems.forEach(item => {
+                total += item.price * item.quantity;
+                html += `
+                    <div class="border-b pb-3 mb-3 last:border-b-0 last:pb-0 last:mb-0">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-medium text-stone-800 text-sm">${item.name}</h4>
+                            <button onclick="removeFromOrder(${item.id})" class="text-red-500 hover:text-red-700 text-sm">
+                                ✕
+                            </button>
+                        </div>
+                        ${item.customizations ? `
+                            <div class="text-xs text-stone-600 mb-2">
+                                ${item.customizations.join(', ')}
+                            </div>
+                        ` : ''}
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center space-x-2">
+                                <button onclick="updateQuantity(${item.id}, -1)" 
+                                        class="quantity-btn w-6 h-6 bg-stone-200 hover:bg-stone-300 rounded-full flex items-center justify-center text-sm font-medium">
+                                    −
+                                </button>
+                                <span class="text-sm font-medium">${item.quantity}</span>
+                                <button onclick="updateQuantity(${item.id}, 1)" 
+                                        class="quantity-btn w-6 h-6 bg-stone-200 hover:bg-stone-300 rounded-full flex items-center justify-center text-sm font-medium">
+                                    +
+                                </button>
+                            </div>
+                            <span class="font-semibold text-stone-800">$${item.price * item.quantity} MXN</span>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            orderItemsContainer.innerHTML = html;
+            orderTotal.textContent = `$${total} MXN`;
+        }
+
+        function sendToWhatsApp() {
+            if (orderItems.length === 0) return;
+            
+            let message = "🍽️ *PEDIDO NARRATIVA CAFÉ*\n\n";
+            let total = 0;
+            
+            orderItems.forEach((item, index) => {
+                total += item.price * item.quantity;
+                message += `${index + 1}. *${item.name}*\n`;
+                message += `   Cantidad: ${item.quantity}\n`;
+                message += `   Precio: $${item.price * item.quantity} MXN\n`;
+                
+                if (item.customizations && item.customizations.length > 0) {
+                    message += `   Personalización: ${item.customizations.join(', ')}\n`;
+                }
+                message += "\n";
+            });
+            
+            message += `💰 *TOTAL: $${total} MXN*\n\n`;
+            message += "¡Gracias por tu pedido! 😊";
+            
+            // CAMBIA ESTE NÚMERO POR TU NÚMERO DE WHATSAPP (con código de país, sin +)
+            const phoneNumber = "5215512345678"; // Ejemplo: México +52 9991325479 = 5219991325479
+            
+            const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappURL, '_blank');
+        }
+
+        // Event listeners for modal
+        document.addEventListener('change', function(e) {
+            if (e.target.name === 'base' || e.target.name === 'free' || 
+                e.target.name === 'extras' || e.target.name === 'toppings') {
+                updateModalPrice();
+            }
+            
+            if (e.target.type === 'checkbox') {
+                e.target.closest('label').classList.toggle('selected', e.target.checked);
+            }
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('customizationModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeCustomization();
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99558f794442aec5',t:'MTc2MTYwMzQxNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
